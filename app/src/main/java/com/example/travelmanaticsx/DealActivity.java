@@ -2,6 +2,7 @@ package com.example.travelmanaticsx;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,17 +13,18 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class InsertActivity extends AppCompatActivity {
+public class DealActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
     private EditText mTxtTitle;
     private EditText mTxtPrice;
     private EditText mTxtDescription;
+    TravelDeal deal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_insert);
+        setContentView(R.layout.activity_deal);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("traveldeals");
@@ -30,6 +32,17 @@ public class InsertActivity extends AppCompatActivity {
         mTxtTitle = findViewById(R.id.txtTitle);
         mTxtPrice = findViewById(R.id.txtPrice);
         mTxtDescription = findViewById(R.id.txtDescription);
+
+        Intent intent = getIntent();
+        TravelDeal deal = (TravelDeal) intent.getSerializableExtra("Deal");
+        if (deal==null) {
+            deal = new TravelDeal();
+        }
+        this.deal = deal;
+        mTxtTitle.setText(deal.getTitle());
+        mTxtPrice.setText(deal.getDescription());
+        mTxtDescription.setText(deal.getPrice());
+
     }
 
     @Override
@@ -46,6 +59,12 @@ public class InsertActivity extends AppCompatActivity {
                 savedDeal();
                 Toast.makeText(this, "Deal saved", Toast.LENGTH_LONG).show();
                 clean();
+                backToList();
+                return true;
+            case R.id.delete_menu:
+                deleteDeal();
+                Toast.makeText(this, "Deal deleted!", Toast.LENGTH_LONG).show();
+                backToList();
                 return true;
 
                 default:
@@ -54,12 +73,28 @@ public class InsertActivity extends AppCompatActivity {
     }
 
     private void savedDeal() {
-        String title = mTxtTitle.getText().toString();
-        String price = mTxtPrice.getText().toString();
-        String description = mTxtDescription.getText().toString();
-        TravelDeal deal = new TravelDeal(title, price, description, "");
+        deal.setTitle(mTxtTitle.getText().toString());
+        deal.setDescription(mTxtDescription.getText().toString());
+        deal.setPrice(mTxtPrice.getText().toString());
+        if(deal.getId()==null) {
+            mDatabaseReference.push().setValue(deal);
+        }
+        else {
+            mDatabaseReference.child(deal.getId()).setValue(deal);
+        }
+    }
 
-        mDatabaseReference.push().setValue(deal);
+    private void deleteDeal() {
+        if (deal == null) {
+            Toast.makeText(this, "Please save the deal before deleting", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mDatabaseReference.child(deal.getId()).removeValue();
+
+    }
+    private void backToList() {
+        Intent intent = new Intent(this, ListActivity.class);
+        startActivity(intent);
     }
 
     private void clean() {

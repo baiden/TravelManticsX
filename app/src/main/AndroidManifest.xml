@@ -19,8 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InsertActivity"
-            android:label="Insert"></activity>
+        <activity android:name=".DealActivity"
+            android:label="Deal"></activity>
     </application>
 
 </manifest>
