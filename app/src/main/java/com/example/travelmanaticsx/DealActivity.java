@@ -26,22 +26,25 @@ public class DealActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deal);
 
+        // Creates an instance of the database
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+
+        // Creates a reference of the database and assigns the targeted path
         mDatabaseReference = mFirebaseDatabase.getReference().child("traveldeals");
 
         mTxtTitle = findViewById(R.id.txtTitle);
-        mTxtPrice = findViewById(R.id.txtPrice);
         mTxtDescription = findViewById(R.id.txtDescription);
+        mTxtPrice = findViewById(R.id.txtPrice);
 
         Intent intent = getIntent();
         TravelDeal deal = (TravelDeal) intent.getSerializableExtra("Deal");
-        if (deal==null) {
+        if (deal == null) {
             deal = new TravelDeal();
         }
         this.deal = deal;
         mTxtTitle.setText(deal.getTitle());
-        mTxtPrice.setText(deal.getDescription());
-        mTxtDescription.setText(deal.getPrice());
+        mTxtDescription.setText(deal.getDescription());
+        mTxtPrice.setText(deal.getPrice());
 
     }
 
@@ -54,7 +57,7 @@ public class DealActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.save_menu:
                 savedDeal();
                 Toast.makeText(this, "Deal saved", Toast.LENGTH_LONG).show();
@@ -67,8 +70,8 @@ public class DealActivity extends AppCompatActivity {
                 backToList();
                 return true;
 
-                default:
-                    return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -76,10 +79,9 @@ public class DealActivity extends AppCompatActivity {
         deal.setTitle(mTxtTitle.getText().toString());
         deal.setDescription(mTxtDescription.getText().toString());
         deal.setPrice(mTxtPrice.getText().toString());
-        if(deal.getId()==null) {
+        if (deal.getId() == null) {
             mDatabaseReference.push().setValue(deal);
-        }
-        else {
+        } else {
             mDatabaseReference.child(deal.getId()).setValue(deal);
         }
     }
@@ -92,6 +94,7 @@ public class DealActivity extends AppCompatActivity {
         mDatabaseReference.child(deal.getId()).removeValue();
 
     }
+
     private void backToList() {
         Intent intent = new Intent(this, ListActivity.class);
         startActivity(intent);

@@ -11,7 +11,7 @@ public class FirebaseUtill {
     private static FirebaseUtill firebaseUtill;
     public static ArrayList<TravelDeal> mDeals;
 
-    public FirebaseUtill() { }
+    private FirebaseUtill() { }
 
     public static void openFbReference(String ref) {
         if (firebaseUtill == null) {
