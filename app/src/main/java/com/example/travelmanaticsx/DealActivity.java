@@ -27,10 +27,10 @@ public class DealActivity extends AppCompatActivity {
         setContentView(R.layout.activity_deal);
 
         // Creates an instance of the database
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabase = FirebaseUtill.mFirebaseDatabase;
 
         // Creates a reference of the database and assigns the targeted path
-        mDatabaseReference = mFirebaseDatabase.getReference().child("traveldeals");
+        mDatabaseReference = FirebaseUtill.mDatabaseReference;
 
         mTxtTitle = findViewById(R.id.txtTitle);
         mTxtDescription = findViewById(R.id.txtDescription);
@@ -52,6 +52,17 @@ public class DealActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.save_menu, menu);
+        if (FirebaseUtill.isAdmin) {
+            menu.findItem(R.id.delete_menu).setVisible(true);
+            menu.findItem(R.id.save_menu).setVisible(true);
+            enableEditTexts(true);
+        }
+        else {
+            menu.findItem(R.id.delete_menu).setVisible(false);
+            menu.findItem(R.id.save_menu).setVisible(false);
+            enableEditTexts(false);
+        }
+
         return true;
     }
 
@@ -105,5 +116,11 @@ public class DealActivity extends AppCompatActivity {
         mTxtPrice.setText("");
         mTxtDescription.setText("");
         mTxtTitle.requestFocus();
+    }
+
+    private void enableEditTexts(boolean isEnabled) {
+        mTxtTitle.setEnabled(isEnabled);
+        mTxtDescription.setEnabled(isEnabled);
+        mTxtPrice.setEnabled(isEnabled);
     }
 }
