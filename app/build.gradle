@@ -18,7 +18,11 @@ android {
                 proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             }
         }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
     }
+}
 
     dependencies {
         implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -34,6 +38,9 @@ android {
         //Firebase Realtime Database
         implementation 'com.google.firebase:firebase-database:18.0.1'
 
+        //Firebase Storage
+        implementation 'com.google.firebase:firebase-storage:18.1.1'
+
         //Firebase Authentication UI
         implementation 'com.firebaseui:firebase-ui-auth:5.0.0'
 
@@ -42,6 +49,9 @@ android {
 
         //RecyclerView
         implementation 'androidx.recyclerview:recyclerview:1.0.0'
+
+        //Picasso
+        implementation 'com.squareup.picasso:picasso:2.71828'
     }
 
     apply plugin: 'com.google.gms.google-services'
